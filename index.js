@@ -139,7 +139,7 @@ app.post('/loggingIn', async (req, res) => {
 		return;
 	}
 	else {
-		res.redirect("/login");
+		res.redirect("/loginFail");
 		return;
 	}
 });

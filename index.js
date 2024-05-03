@@ -92,6 +92,10 @@ app.post('/signupSubmit', async (req, res) => {
     return;
   }
 
+  req.session.authenticated = true;
+  req.session.name = name;
+  req.session.cookie.maxAge = expireTime;
+
   var hashedPassword = bcrypt.hashSync(password, saltRounds);
   await userCollection.insertOne({name: name, email: email, password: hashedPassword});
   req.session.authenticated = true;

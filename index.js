@@ -26,6 +26,8 @@ var {database} = include('databaseConnection');
 
 const userCollection = database.db(mongodb_database).collection('users');
 
+app.set('view engine', 'ejs');
+
 app.use(express.urlencoded({extended: false}));
 
 var mongoStore = MongoStore.create({
@@ -50,28 +52,11 @@ app.use(express.static(__dirname + "/public"));
 app.get('/', (req, res) => {
   var name = req.session.name;
   var loggedIn = req.session.authenticated;
-  var html = "";
-  if (!loggedIn) {
-    html = `<form>
-    <button type="submit" formaction="/signup" formmethod="get">Sign up</button><br>
-    <button type="submit" formaction="/login" formmethod="get">Log in</button>
-    </form>`;
-  } else {
-    html = `Hello, ${name}! <br><form>
-    <button type="submit" formaction="/members" formmethod="get">Go to Members Area</button><br>
-    <button type="submit" formaction="/logout" formmethod="get">Logout</button>
-    </form>`;
-  }
-  res.send(html);
+  res.render("index", {loggedIn: loggedIn, name: name});
 });
 
 app.get('/signup', (req, res) => {
-  var html = `<form action="signupSubmit" method="post">create user<br>
-  <input type="text" id="name" name="name" placeholder="name"><br>
-  <input type="email" id="email" name="email" placeholder="email"><br>
-  <input type="password" id="password" name="password" placeholder="password"><br>
-  <button type="submit">Submit</button></form>`;
-  res.send(html);
+  res.render("signup");
 });
 
 app.post('/signupSubmit', async (req, res) => {
@@ -102,11 +87,7 @@ app.post('/signupSubmit', async (req, res) => {
 });
 
 app.get('/login', (req, res) => {
-  var html = `<form action="/loggingIn" method="post">log in<br>
-  <input type="email" id="email" name="email" placeholder="email"><br>
-  <input type="password" id="password" name="password" placeholder="password"><br>
-  <button type="submit">Submit</button></form>`;
-  res.send(html);
+  res.render("login");
 });
 
 app.post('/loggingIn', async (req, res) => {
@@ -145,10 +126,7 @@ app.post('/loggingIn', async (req, res) => {
 });
 
 app.get('/loginFail', (req, res) => {
-  var html = `Invalid email/password combination.<form>
-  <a href="/login">Try again</a>
-  </form>`;
-  res.send(html);
+  res.render("loginFail");
 });
 
 app.get('/members', (req, res) => {
@@ -158,12 +136,7 @@ app.get('/members', (req, res) => {
     return;
   } else {
     var rng = Math.round(Math.random()*2);
-    var html = `<h1>Welcome, ${req.session.name}.</h1>
-    <img src="./${rng}.jpg" alt="Welcome!"><br>
-    <form>
-    <button type="submit" formaction="/logout" formmethod="get">Sign out</button>
-    </form>`;
-    res.send(html);
+    res.render("members", {name: req.session.name, rng: rng});
   }
 });
 

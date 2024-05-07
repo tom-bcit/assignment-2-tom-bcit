@@ -1,0 +1,12 @@
+<!DOCTYPE html>
+<% if (!loggedIn) { %>
+  <form>
+    <button type="submit" formaction="/signup" formmethod="get">Sign up</button><br>
+    <button type="submit" formaction="/login" formmethod="get">Log in</button>
+  </form>
+<% } else { %>
+  Hello, <%- name -%>! <br><form>
+  <button type="submit" formaction="/members" formmethod="get">Go to Members Area</button><br>
+  <button type="submit" formaction="/logout" formmethod="get">Logout</button>
+  </form>
+  <% } %>

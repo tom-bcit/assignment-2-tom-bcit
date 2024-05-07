@@ -45,9 +45,26 @@ app.use(session({
 }
 ));
 
-// Define routes here
-
 app.use(express.static(__dirname + "/public"));
+
+function sessionChecker(req, res, next) {
+  if (req.session.authenticated) {
+    next();
+  } else {
+    res.redirect('/');
+  }
+} 
+
+function adminChecker(req, res, next) {
+  if (req.session.user_type == "admin") {
+    next();
+  } else {
+    res.status(403);
+    res.render("error", {error: "You do not have permission to access this page."})
+  }
+} 
+
+// Define routes here
 
 app.get('/', (req, res) => {
   var name = req.session.name;
@@ -78,9 +95,10 @@ app.post('/signupSubmit', async (req, res) => {
   }
 
   var hashedPassword = bcrypt.hashSync(password, saltRounds);
-  await userCollection.insertOne({name: name, email: email, password: hashedPassword});
+  await userCollection.insertOne({name: name, email: email, password: hashedPassword, user_type: "user"});
   req.session.authenticated = true;
   req.session.name = name;
+  req.session.user_type = "user";
   req.session.cookie.maxAge = expireTime;
 	res.redirect('/members');
   
@@ -106,7 +124,7 @@ app.post('/loggingIn', async (req, res) => {
     return;
   }
 
-  var result = await userCollection.find({email: email}).project({name: 1, email: 1, password: 1, _id: 1}).toArray();
+  var result = await userCollection.find({email: email}).project({name: 1, email: 1, password: 1, _id: 1, user_type: 1}).toArray();
   if (result.length != 1) {
 		res.redirect("/loginFail");
 		return;
@@ -114,6 +132,7 @@ app.post('/loggingIn', async (req, res) => {
 	if (await bcrypt.compare(password, result[0].password)) {
 		req.session.authenticated = true;
 		req.session.name = result[0].name;
+    req.session.user_type = result[0].user_type;
 		req.session.cookie.maxAge = expireTime;
 
 		res.redirect('/members');
@@ -129,21 +148,20 @@ app.get('/loginFail', (req, res) => {
   res.render("loginFail");
 });
 
-app.get('/members', (req, res) => {
-  var validSession = req.session.authenticated;
-  if (!validSession) {
-    res.redirect('/');
-    return;
-  } else {
-    var rng = Math.round(Math.random()*2);
-    res.render("members", {name: req.session.name, rng: rng});
-  }
+app.get('/members', sessionChecker, (req, res) => {
+  var rng = Math.round(Math.random()*2);
+  res.render("members", {name: req.session.name, rng: rng});
 });
 
 app.get('/logout', (req, res) => {
   req.session.authenticated = false;
   req.session.destroy();
   res.redirect('/');
+});
+
+app.get('/admin', sessionChecker, adminChecker, async (req, res) => {
+  var result = await userCollection.find().project({name: 1, user_type: 1}).toArray();
+  res.render("admin", {users: result});
 });
 
 app.get("*", (req,res) => {

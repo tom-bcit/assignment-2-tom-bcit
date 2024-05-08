@@ -64,6 +64,11 @@ function adminChecker(req, res, next) {
   }
 } 
 
+async function updateUserType(email, user_type) {
+  await userCollection.updateOne({email: email}, { $set : {user_type: user_type}});
+  console.log("User type updated");
+}
+
 // Define routes here
 
 app.get('/', (req, res) => {
@@ -149,8 +154,7 @@ app.get('/loginFail', (req, res) => {
 });
 
 app.get('/members', sessionChecker, (req, res) => {
-  var rng = Math.round(Math.random()*2);
-  res.render("members", {name: req.session.name, rng: rng});
+  res.render("members", {name: req.session.name});
 });
 
 app.get('/logout', (req, res) => {
@@ -160,7 +164,12 @@ app.get('/logout', (req, res) => {
 });
 
 app.get('/admin', sessionChecker, adminChecker, async (req, res) => {
-  var result = await userCollection.find().project({name: 1, user_type: 1}).toArray();
+  var email = req.query.email;
+  var user_type = req.query.user_type;
+  if(email && user_type) {
+    await updateUserType(email, user_type);
+  }
+  var result = await userCollection.find().project({name: 1, user_type: 1, email: 1}).toArray();
   res.render("admin", {users: result});
 });
 

@@ -1,13 +1,14 @@
 <%- include("templates/header") %> 
 <% if (!loggedIn) { %>
-  <form>
-    <button type="submit" formaction="/signup" formmethod="get">Sign up</button><br>
-    <button type="submit" formaction="/login" formmethod="get">Log in</button>
+  <form class="p-2">
+    <button type="submit" formaction="/signup" formmethod="get" class="btn btn-primary w-90 m-1" >Sign up</button><br>
+    <button type="submit" formaction="/login" formmethod="get" class="btn btn-primary w-90 m-1" >Log in</button>
   </form>
 <% } else { %>
-  Hello, <%= name %>! <br><form>
-  <button type="submit" formaction="/members" formmethod="get">Go to Members Area</button><br>
-  <button type="submit" formaction="/logout" formmethod="get">Logout</button>
+  <h1 class="h3 mb-3 fw-normal">Hello, <%= name %>! </h1>
+  <form class="p-2">
+    <button type="submit" formaction="/members" formmethod="get" class="btn btn-primary w-90 m-1" >Go to Members Area</button><br>
+    <button type="submit" formaction="/logout" formmethod="get" class="btn btn-primary w-90 m-1" >Logout</button>
   </form>
 <% } %>
 <%- include("templates/footer") %>

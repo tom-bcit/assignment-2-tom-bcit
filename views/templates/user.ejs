@@ -1,2 +1,8 @@
 <!DOCTYPE html>
-<li> <%= user.name %> (<%= user.user_type %>) <form><button>Promote to Admin</button><button>Demote to User</button></form></li>
+<li> <%= user.name %> (<%= user.user_type %>) 
+  <!-- <form>
+  <button type="submit" formaction="window.location.href/admin?email=<%= user.user_type %>&user_type=admin" formmethod="get">Promote to Admin</button>
+  <button type="submit" formaction="/admin?email=<%= user.user_type %>&user_type=user" formmethod="get">Demote to User</button></form> -->
+  <a href="/admin?email=<%= user.email %>&user_type=admin" class="btn btn-danger m-1">Promote to Admin</a>
+  <a href="/admin?email=<%= user.email %>&user_type=user" class="btn btn-success m-1">Demote to User</a>
+</li>

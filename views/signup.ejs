@@ -1,8 +1,21 @@
 <%- include("templates/header") %> 
-<form action="signupSubmit" method="post">create user<br>
-  <input type="text" id="name" name="name" placeholder="name"><br>
-  <input type="email" id="email" name="email" placeholder="email"><br>
-  <input type="password" id="password" name="password" placeholder="password"><br>
-  <button type="submit">Submit</button>
+<div class="p-2">
+
+<form action="signupSubmit" method="post">
+  <h1 class="h3 mb-3 fw-normal">Create user</h1>
+  <div class="form-floating">
+    <input type="text" class="form-control" id="name" name="name" placeholder="name">
+    <label for="floatingInput">Email address</label>
+  </div>
+  <div class="form-floating">
+    <input type="email" class="form-control" id="email" name="email" placeholder="email">
+    <label for="floatingInput">Email address</label>
+  </div>
+  <div class="form-floating">
+    <input type="password" class="form-control" id="password" name="password" placeholder="password">
+    <label for="floatingPassword">Password</label>
+  </div>
+  <button class="btn btn-primary w-100 py-2" type="submit">Submit</button>
 </form>
+</div>
 <%- include("templates/footer") %>

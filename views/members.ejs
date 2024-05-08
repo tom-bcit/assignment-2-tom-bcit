@@ -1,7 +1,23 @@
 <%- include("templates/header") %> 
-<h1>Welcome, <%= name %>.</h1>
-<img src="./<%= rng %>.jpg" alt="Welcome!"><br>
-<form>
-  <button type="submit" formaction="/logout" formmethod="get">Sign out</button>
-</form>
+<div class="p-2">
+  <h1 class="h3 mb-3 fw-normal">Welcome, <%= name %>.</h1>
+  <h2>Here are some cats!</h2>
+  <div class="container">
+    <div class="row">
+      <div class="col-sm-4 col-xl p-2">
+        <img src="./0.jpg" alt="Welcome!"><br>
+      </div>
+      <div class="col-sm-4 col-xl p-2">
+        <img src="./1.jpg" alt="Welcome!"><br>
+      </div>
+      <div class="col-sm-4 col-xl p-2">
+        <img src="./2.jpg" alt="Welcome!"><br>
+      </div>
+    </div>
+  </div>
+  <form>
+    <button class="btn btn-primary w-90 m-1" type="submit" formaction="/logout" formmethod="get">Sign out</button>
+  </form>
+  
+</div>
 <%- include("templates/footer") %>
